@@ -1,0 +1,234 @@
+<?php
+
+namespace {{ namespace }}\{{ app|capitalize }}\Controller;
+
+{% block use_statements %}
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+use {{ namespace }}\Form\Type\{{ model }}Type;
+use {{ namespace }}\Model\{{ model }};
+use {{ namespace }}\Model\{{ model }}Peer;
+use {{ namespace }}\Model\{{ model }}Query;
+{% endblock use_statements %}
+
+{% block class_definition %}
+class {{ model }}Controller extends Controller
+{% endblock class_definition %}
+{
+{% block class_body %}
+	const ROWS_PER_PAGE = 10;
+
+    public function indexAction()
+    {	
+    	$request = $this->getRequest();
+    	$query = $this->search();
+
+    	$page = $request->get('page', 1);
+
+        $pager = $query->filter{{ model }}sByOptions()
+            ->paginate($page, self::ROWS_PER_PAGE);
+
+        return array(
+    		'pager' => $pager,
+            'page' => $page,
+            'route' => '{{ extension_alias }}_{{ app|lower }}_{{ table }}s_index',
+            'routeParams' => $this->routeParams
+		);
+
+    }
+
+    public function addAction()
+    {
+        $request = $this->getRequest();
+        ${{ modelVariable }} = new {{ model }}();
+
+        $form = $this->createForm(new {{ model }}Type(), ${{ modelVariable }});
+
+        if ('POST' === $request->getMethod()) {
+            $form->submit($request);
+
+            $formData = $request->get($form->getName());
+            if ($form->isValid()) {
+                $con = Propel::getConnection({{ model }}Peer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+
+                try {
+                    
+                    $modelManager = $this->get('{{ extension_alias }}.model_manager.{{ table }}');
+                    $modelManager->save(${{ modelVariable }}, $con);
+
+                    $this->get('session')->getFlashBag()->add('notification', array(
+                        array(
+                            'notificationType' => 'success',
+                            'notificationMessage' => 'You successfully saved an entry.'
+                            )
+                        )
+                    );
+
+                    return $this->redirect(
+                        $this->generateUrl('{{ extension_alias }}_backend_{{ table }}s_index')
+                    );
+
+                }catch(Exception $e){
+                    throw $this->createNotFoundException($e->getMessage());
+                }
+            }
+        }
+
+        return $this->render(
+            '{{ name }}:{{ app|capitalize }}/{{ model }}:add.html.twig',
+            array(
+                'form' => $form->createView()
+            )
+        );
+    }
+
+    public function editAction()
+    {
+        $request = $this->getRequest();
+        ${{ modelVariable }} = {{ model }}Query::create()
+            ->findPk($request->get('id'));
+        
+        if (!${{ modelVariable }}) {
+            throw $this->createNotFoundException("Entry not found.");
+        }
+
+        $form = $this->createForm(new {{ model }}Type(), ${{ modelVariable }});
+
+        if ('POST' === $request->getMethod()) {
+            $form->submit($request);
+
+            $formData = $request->get($form->getName());
+            if ($form->isValid()) {
+                $con = Propel::getConnection({{ model }}Peer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+
+                try {
+                    
+                    $modelManager = $this->get('{{ extension_alias }}.model_manager.{{ table }}');
+                    $modelManager->save(${{ modelVariable }}, $con);
+
+                    $this->get('session')->getFlashBag()->add('notification', array(
+                        array(
+                            'notificationType' => 'success',
+                            'notificationMessage' => 'You successfully saved the entry.'
+                            )
+                        )
+                    );
+
+                    return $this->redirect(
+                        $this->generateUrl(
+                            '{{ extension_alias }}_backend_{{ table }}s_index'
+                        )
+                    );
+
+                }catch(Exception $e){
+                    throw $this->createNotFoundException($e->getMessage());
+                }
+            }
+        }
+
+        return $this->render(
+            '{{ name }}:{{ app|capitalize }}/{{ model }}:edit.html.twig',
+            array(
+                'form' => $form->createView(),
+                'carMake' => ${{ modelVariable }}
+            )
+        );
+    }
+
+    public function deleteAction()
+    {
+        $request = $this->getRequest();
+        $id = $request->get('id');
+        
+        try {
+            $this->delete($id);
+
+            $this->get('session')->getFlashBag()->add('notification', array(
+                array(
+                    'notificationType' => 'success',
+                    'notificationMessage' => 'You have successfully deleted the entry.'
+                    )
+                )
+            );
+        } catch(Exception $e) {
+            throw $e;
+        }
+
+        return $this->redirect(
+            $this->generateUrl(
+                '{{ extension_alias }}_backend_{{ table }}s_index'
+            )
+        );
+    }
+
+    public function batchAction(Request $request)
+    {
+        $this->preExecute();
+
+        $ids = $request->get('ids');
+
+        $action = $request->get('batchAction');
+
+        $failedIds = array();
+
+        foreach ($ids as $id) {
+            try {
+                if (method_exists($this, $action)) {
+                    $this->$action($id);
+                }
+            } catch(Exception $e) {
+                $failedIds[] = $id;
+            }
+        }
+
+        if (empty($failedIds)) {
+            $this->get('session')->getFlashBag()->add('notification', array(
+                array(
+                    'notificationType' => 'success',
+                    'notificationMessage' => 'You have successfully deleted the selected entries'
+                    )
+                )
+            );
+        }
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    protected function delete($id)
+    {
+        ${{ modelVariable }} = {{ model }}Query::create()
+            ->findPk($id);
+
+        if (!${{ modelVariable }}) {
+            throw $this->createNotFoundException("Entry not found.");
+        }
+
+        $modelManager = $this->get('{{ extension_alias }}.model_manager.{{ table }}');
+        $modelManager->delete(${{ modelVariable }});
+    }
+
+    protected function search()
+    {
+        $request = $this->getRequest();
+        $this->routeParams = array();
+
+        $query = {{ model }}Query::create();
+
+        $searchTerm = $request->get('search');
+        $searchBy = $request->get('searchBy', 'name');
+
+        if (!empty($searchTerm)) {
+
+            // add filters here
+
+        }
+
+        $this->routeParams['search'] = $searchTerm;
+        $this->routeParams['searchBy'] = $searchBy;
+
+        return $query;
+    }
+{% endblock class_body %}
+}
