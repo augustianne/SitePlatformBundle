@@ -1,0 +1,12 @@
+	public function filter{{ model }}sByOptions($options=array())
+	{
+		{% for key,column in columnNames -%}
+		{% set column = column|lower -%}
+		if (isset($options['option_{{ column }}'])) {
+			$this->filterBy{{ phpNames[key] }}($options['option_{{ column }}']);
+		}
+
+		{% endfor %}
+
+        return $this;
+    }

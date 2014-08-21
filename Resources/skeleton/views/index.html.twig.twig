@@ -1,0 +1,54 @@
+{{ '{% extends "' ~ name ~ '::' ~ app|capitalize ~ '/base.html.twig" %}' }}
+
+{{ '{% block body %}' }}
+    <div class="col">
+        <div>
+            <header class="row">
+                <div class="col col-md-8">
+                    <h1 class="h2">{{ (table|replace({'_': ' ' })|lower)|capitalize }}s</h1>
+                </div>
+                <div class="col col-md-4">
+                    <a href="{{ "{{ path('" ~ extension_alias ~ "_" ~ app ~ "_" ~ table ~ "_add') }}" }}" class="pull-right btn btn-success btn-page-action">Add {{ (table|replace({'_': ' ' })|lower)|capitalize }}</a>
+                </div>
+            </header>
+            <div class="row gutters">
+                <hr>
+                {{ "{% include '" ~ name ~ "::" ~ app|capitalize ~ "/Partial/flash.html.twig' %}" }}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            {% for columnHeader in columnHeaders -%}
+                                <th>{{ (columnHeader|replace({'_': ' ' })|lower)|capitalize }}</th>
+                            {% endfor -%}
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ '{% if pager.count == 0 %}' }}
+                            <tr>
+                                <td colspan="{{ columnValues|length + 1 }}">
+                                    <p class="text-info">
+                                        No entries found. <a href="{{ "{{ path('" ~ extension_alias ~ "_" ~ app ~ "_" ~ table ~ "_add') }}" }}">Add {{ (table|replace({'_': ' ' })|lower)|capitalize }}</a>
+                                    </p>
+                                </td>
+                            </tr>
+                        {{ '{% else %}' }}
+                            <tr>
+                                {{ '{% for ' ~ modelVariable ~ ' in pager.results %}' }}
+                                    {% for columnValue in columnValues -%}
+                                        <td>{{ '{{ ' ~ modelVariable ~ '.' ~ columnValue ~ ' }}' -}}</td>
+                                    {% endfor -%}
+                                    <td>
+                                        <a href="{{ "{{ path('" ~ extension_alias ~ "_" ~ app ~ "_" ~ table ~ "_edit', {'id': " ~ modelVariable ~ ".id }) }}" }}">Edit</a>
+                                        <a href="{{ "{{ path('" ~ extension_alias ~ "_" ~ app ~ "_" ~ table ~ "_delete', {'id': " ~ modelVariable ~ ".id }) }}" }}">Delete</a>
+                                    </td>
+                                {{ '{% endfor %}' }}
+                            </tr>
+                        {{ '{% endif %}' }}
+                    </tbody>
+                </table>
+                {{ "{% include '" ~ name ~ "::" ~ app|capitalize ~ "/Partial/pagination.html.twig' %}" }}
+            </div>
+        </div>
+    </div>
+{{ '{% endblock %}' }}

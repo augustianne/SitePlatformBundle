@@ -1,0 +1,15 @@
+{% for columnName in columnNames -%}
+{% set name = columnName|lower -%}
+{% if name != 'id' %}
+<div class="control-group{{ '{% if not form.' ~ name ~ '.vars.valid %} error {% endif %}' }}">
+    {{ '{{ form_label(form.' ~ name ~ ') }}' }}
+    {{ "{{ form_widget(form." ~ name ~ ", { 
+        attr: { 'class': 'form-control' }
+    }) }}" }}
+    {{ '{% if not form.' ~ name ~ '.vars.valid %}' }}
+        <small class="help-text text-error">{{ '{{ form.' ~ name ~ '.vars.errors[0].message }}' }}</small>
+    {{ '{% endif %}' }}
+</div>
+{% endif %}
+{% endfor %}
+{{ '{{ form_rest(form) }}' }}

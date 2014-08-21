@@ -1,0 +1,13 @@
+{{ '{% extends "' ~ name ~ '::' ~ app|capitalize ~ '/base.html.twig" %}' }}
+
+{{ '{% block body %}' }}
+	<div class="col">
+        <div class="block">
+			<h3 class="h3">Edit {{ (table|replace({'_': ' ' })|lower)|capitalize }}</h3>
+			<form novalidate action="{{ "{{ path('" ~ extension_alias ~ "_" ~ app ~ "_" ~ table ~ "_edit', {'id': " ~ modelVariable ~ ".id }) }}" }}" method="POST">
+				{{ "{% include '" ~ name ~ "::" ~ app|capitalize ~ "/" ~ model ~ "/Partial/form.html.twig' %}" }}
+				<input type="submit" class="btn btn-success" value="Save">
+			</form>
+        </div>
+    </div>
+{{ '{% endblock %}' }}

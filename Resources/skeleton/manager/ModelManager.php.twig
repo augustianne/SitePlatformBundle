@@ -1,0 +1,68 @@
+<?php
+
+namespace {{ namespace }}\Service\ModelManager;
+
+use \Exception;
+use \Propel;
+use \PropelException;
+
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
+use {{ namespace }}\Model\{{ model }};
+use {{ namespace }}\Model\{{ model }}Peer;
+
+class {{ model }}Manager
+{
+
+    protected $dispatcher;
+
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
+    public function save({{ model }} ${{ modelVariable }}, $con=null, $events=array())
+    {
+        if ($con === null) {
+            $con = Propel::getConnection({{ model }}Peer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+        }
+
+        $con->beginTransaction();
+        try {
+
+            ${{ modelVariable }}->save();
+
+            $con->commit();
+        } catch(PropelException $e) {
+            $con->rollback();
+            throw $e;
+        }
+
+        foreach ($events as $key => $event) {
+            $this->dispatcher->dispatch($key, $event);
+        }
+    }
+
+    public function delete({{ model }} ${{ modelVariable }}, $con=null, $events=array())
+    {
+        if ($con === null) {
+            $con = Propel::getConnection({{ model }}Peer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+        }
+
+        $con->beginTransaction();
+        try {
+
+            ${{ modelVariable }}->delete();
+
+            $con->commit();
+        } catch(PropelException $e) {
+            $con->rollback();
+            throw $e;
+        }
+
+        foreach ($events as $key => $event) {
+            $this->dispatcher->dispatch($key, $event);
+        }
+    }
+
+}
