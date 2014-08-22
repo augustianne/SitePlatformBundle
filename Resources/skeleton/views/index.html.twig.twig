@@ -38,8 +38,8 @@
                                             </td>
                                         </tr>
                                     {{ '{% else %}' }}
-                                        <tr>
-                                            {{ '{% for ' ~ modelVariable ~ ' in pager.results %}' }}
+                                        {{ '{% for ' ~ modelVariable ~ ' in pager.results %}' }}
+                                            <tr>
                                                 {% for columnValue in columnValues -%}
                                                     <td>{{ '{{ ' ~ modelVariable ~ '.' ~ columnValue ~ ' }}' -}}</td>
                                                 {% endfor -%}
@@ -47,8 +47,8 @@
                                                     <a href="{{ "{{ path('" ~ extension_alias ~ "_" ~ app ~ "_" ~ table ~ "_edit', {'id': " ~ modelVariable ~ ".id }) }}" }}">Edit</a>
                                                     <a href="{{ "{{ path('" ~ extension_alias ~ "_" ~ app ~ "_" ~ table ~ "_delete', {'id': " ~ modelVariable ~ ".id }) }}" }}">Delete</a>
                                                 </td>
-                                            {{ '{% endfor %}' }}
-                                        </tr>
+                                            </tr>
+                                        {{ '{% endfor %}' }}
                                     {{ '{% endif %}' }}
                                 </tbody>
                             </table>
