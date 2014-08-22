@@ -1,13 +1,31 @@
-{{ '{% extends "' ~ name ~ '::' ~ app|capitalize ~ '/base.html.twig" %}' }}
+{{ '{# {% extends "' ~ name ~ '::' ~ app|capitalize ~ '/base.html.twig" %} #}' }}
 
 {{ '{% block body %}' }}
-	<div class="col">
-        <div class="block">
-			<h3 class="h3">Add {{ (table|replace({'_': ' ' })|lower)|capitalize }}</h3>
-			<form novalidate action="{{ "{{ path('" ~ extension_alias ~ "_" ~ app ~ "_" ~ table ~ "_add') }}" }}" method="POST">
-				{{ "{% include '" ~ name ~ "::" ~ app|capitalize ~ "/" ~ model ~ "/Partial/form.html.twig' %}" }}
-				<input type="submit" class="btn btn-success" value="Save">
-			</form>
+	<div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Add {{ (table|replace({'_': ' ' })|lower)|capitalize }}</h1>
+            </div>
+            <!-- /.col-lg-12 -->
         </div>
-    </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Basic Form Elements
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                            	<form novalidate action="{{ "{{ path('" ~ extension_alias ~ "_" ~ app ~ "_" ~ table ~ "_add') }}" }}" method="POST">
+									{{ "{% include '" ~ name ~ "::" ~ app|capitalize ~ "/" ~ model ~ "/Partial/form.html.twig' %}" }}
+									<input type="submit" class="btn btn-success" value="Save">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {{ '{% endblock %}' }}

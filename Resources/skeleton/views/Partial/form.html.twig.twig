@@ -1,7 +1,7 @@
 {% for columnName in columnNames -%}
 {% set name = columnName|lower -%}
 {% if name != 'id' %}
-<div class="control-group{{ '{% if not form.' ~ name ~ '.vars.valid %} error {% endif %}' }}">
+<div class="form-group{{ '{% if not form.' ~ name ~ '.vars.valid %} has-error {% endif %}' }}">
     {{ '{{ form_label(form.' ~ name ~ ') }}' }}
     {{ "{{ form_widget(form." ~ name ~ ", { 
         attr: { 'class': 'form-control' }
