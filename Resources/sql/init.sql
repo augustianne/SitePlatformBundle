@@ -21,18 +21,18 @@ ENGINE = InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sp_feature_category` (
-  `feature_id` INT(11) NOT NULL,
-  `category_id` INT(11) NOT NULL,
+  `sp_feature_id` INT(11) NOT NULL,
+  `sp_category_id` INT(11) NOT NULL,
   `rank` SMALLINT(6) NOT NULL,
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
-  INDEX `sp_feature_category_FI_1` (`feature_id` ASC),
-  INDEX `sp_feature_category_FI_2` (`category_id` ASC),
+  INDEX `sp_feature_category_FI_1` (`sp_feature_id` ASC),
+  INDEX `sp_feature_category_FI_2` (`sp_category_id` ASC),
   CONSTRAINT `sp_feature_category_FK_1`
-    FOREIGN KEY (`feature_id`)
+    FOREIGN KEY (`sp_feature_id`)
     REFERENCES `sp_feature` (`id`),
   CONSTRAINT `sp_feature_category_FK_2`
-    FOREIGN KEY (`category_id`)
+    FOREIGN KEY (`sp_category_id`)
     REFERENCES `sp_category` (`id`)) 
 ENGINE = InnoDB 
 DEFAULT CHARSET=utf8;
@@ -46,18 +46,18 @@ ENGINE = InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sp_link_category` (
-  `link_id` INT(11) NOT NULL,
-  `category_id` INT(11) NOT NULL,
+  `sp_link_id` INT(11) NOT NULL,
+  `sp_category_id` INT(11) NOT NULL,
   `rank` SMALLINT(6) NOT NULL,
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
-  INDEX `sp_link_category_FI_1` (`link_id` ASC),
-  INDEX `sp_link_category_FI_2` (`category_id` ASC),
+  INDEX `sp_link_category_FI_1` (`sp_link_id` ASC),
+  INDEX `sp_link_category_FI_2` (`sp_category_id` ASC),
   CONSTRAINT `sp_link_category_FK_1`
-    FOREIGN KEY (`link_id`)
+    FOREIGN KEY (`sp_link_id`)
     REFERENCES `sp_link` (`id`),
   CONSTRAINT `sp_link_category_FK_2`
-    FOREIGN KEY (`category_id`)
+    FOREIGN KEY (`sp_category_id`)
     REFERENCES `sp_category` (`id`)) 
 ENGINE = InnoDB 
 DEFAULT CHARSET=utf8;
@@ -74,18 +74,18 @@ ENGINE = InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sp_page_category` (
-  `page_id` INT(11) NOT NULL,
-  `category_id` INT(11) NOT NULL,
+  `sp_page_id` INT(11) NOT NULL,
+  `sp_category_id` INT(11) NOT NULL,
   `rank` SMALLINT(6) NOT NULL,
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
-  INDEX `sp_page_category_FI_1` (`page_id` ASC),
-  INDEX `sp_page_category_FI_2` (`category_id` ASC),
+  INDEX `sp_page_category_FI_1` (`sp_page_id` ASC),
+  INDEX `sp_page_category_FI_2` (`sp_category_id` ASC),
   CONSTRAINT `sp_page_category_FK_1`
-    FOREIGN KEY (`page_id`)
+    FOREIGN KEY (`sp_page_id`)
     REFERENCES `sp_page` (`id`),
   CONSTRAINT `sp_page_category_FK_2`
-    FOREIGN KEY (`category_id`)
+    FOREIGN KEY (`sp_category_id`)
     REFERENCES `sp_category` (`id`)) 
 ENGINE = InnoDB 
 DEFAULT CHARSET=utf8;
@@ -99,18 +99,18 @@ ENGINE = InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sp_setting_category` (
-  `setting_id` INT(11) NOT NULL,
-  `category_id` INT(11) NOT NULL,
+  `sp_setting_id` INT(11) NOT NULL,
+  `sp_category_id` INT(11) NOT NULL,
   `rank` SMALLINT(6) NOT NULL,
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
-  INDEX `sp_setting_category_FI_1` (`setting_id` ASC),
-  INDEX `sp_setting_category_FI_2` (`category_id` ASC),
+  INDEX `sp_setting_category_FI_1` (`sp_setting_id` ASC),
+  INDEX `sp_setting_category_FI_2` (`sp_category_id` ASC),
   CONSTRAINT `sp_setting_category_FK_1`
-    FOREIGN KEY (`setting_id`)
+    FOREIGN KEY (`sp_setting_id`)
     REFERENCES `sp_setting` (`id`),
   CONSTRAINT `sp_setting_category_FK_2`
-    FOREIGN KEY (`category_id`)
+    FOREIGN KEY (`sp_category_id`)
     REFERENCES `sp_category` (`id`)) 
 ENGINE = InnoDB 
 DEFAULT CHARSET=utf8;
@@ -134,18 +134,18 @@ ENGINE = InnoDB
 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sp_testimonial_category` (
-  `testimonial_id` INT(11) NOT NULL,
-  `category_id` INT(11) NOT NULL,
+  `sp_testimonial_id` INT(11) NOT NULL,
+  `sp_category_id` INT(11) NOT NULL,
   `rank` SMALLINT(6) NOT NULL,
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
-  INDEX `sp_testimonial_category_FI_1` (`testimonial_id` ASC),
-  INDEX `sp_testimonial_category_FI_2` (`category_id` ASC),
+  INDEX `sp_testimonial_category_FI_1` (`sp_testimonial_id` ASC),
+  INDEX `sp_testimonial_category_FI_2` (`sp_category_id` ASC),
   CONSTRAINT `sp_testimonial_category_FK_1`
-    FOREIGN KEY (`testimonial_id`)
+    FOREIGN KEY (`sp_testimonial_id`)
     REFERENCES `sp_testimonial` (`id`),
   CONSTRAINT `sp_testimonial_category_FK_2`
-    FOREIGN KEY (`category_id`)
+    FOREIGN KEY (`sp_category_id`)
     REFERENCES `sp_category` (`id`)) 
 ENGINE = InnoDB 
 DEFAULT CHARSET=utf8;
